@@ -36,6 +36,7 @@ class Solver(object):
         self.visdom = args.visdom
         self.visdom_epoch = args.visdom_epoch
         self.visdom_id = args.visdom_id
+        self.pit = args.pit
         if self.visdom:
             from visdom import Visdom
             self.vis = Visdom(env=self.visdom_id)
@@ -177,7 +178,7 @@ class Solver(object):
                 padded_source = padded_source.cuda()
             estimate_source = self.model(padded_mixture)
             loss, max_snr, estimate_source, reorder_estimate_source = \
-                cal_loss(padded_source, estimate_source, mixture_lengths)
+                cal_loss(padded_source, estimate_source, mixture_lengths, self.pit)
             if not cross_valid:
                 self.optimizer.zero_grad()
                 loss.backward()
